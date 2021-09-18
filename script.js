@@ -1,22 +1,46 @@
-var canvas=document.getElementById("theCanvas");
-var canvasReference=canvas.getContext("2d");
-var circleColor="white";
-canvasReference.beginPath();
-canvasReference.strokeStyle=circleColor;
-canvasReference.lineWidth=2;
-canvasReference.arc(200,200,20,0,2*Math.PI);
-canvasReference.stroke();
-canvas.addEventListener("mousedown",mousedownFunction);
-function mousedownFunction(e) {
-    var xCoordinate= e.clientX-canvas.offsetLeft;
-    var yCoordinate= e.clientY-canvas.offsetTop;
-    console.log("x = "+xCoordinate+", y = "+yCoordinate);
-    drawCircle(xCoordinate,yCoordinate);
+var canvas = document.getElementById("myCanvas");
+var canvasReference = canvas.getContext("2d");
+var mouseEvent = "empty";
+var lastXPosition, lastYPosition;
+var penColor = "dodgerblue";
+var lineWidth = 2;
+canvas.addEventListener("mousedown", mouseDown);
+
+function mouseDown(e) {
+    mouseEvent = "mousedown";
 }
-function drawCircle(mouseX,mouseY) {
-    canvasReference.beginPath();
-    canvasReference.strokeStyle=circleColor;
-    canvasReference.lineWidth=2;
-    canvasReference.arc(mouseX,mouseY,20,0,2*Math.PI);
-    canvasReference.stroke();
+
+canvas.addEventListener("mousemove", mouseMove);
+
+function mouseMove(e) {
+    var xPosition = e.clientX-canvas.offsetLeft;
+    var yPosition = e.clientY-canvas.offsetTop;
+    if(mouseEvent=="mousedown") {
+        canvasReference.beginPath();
+        canvasReference.strokeStyle = penColor;
+        canvasReference.lineWidth = lineWidth;
+        console.log("last X position = "+lastXPosition+", "+"last Y position = "+lastYPosition);
+        console.log("new X position = "+xPosition+", "+"new Y position = "+yPosition);
+        canvasReference.moveTo(lastXPosition, lastYPosition);
+        canvasReference.lineTo(xPosition, yPosition);
+        canvasReference.stroke();
+    }
+    lastXPosition = xPosition;
+    lastYPosition = yPosition;
+}
+
+canvas.addEventListener("mouseup", mouseUp);
+
+function mouseUp(e) {
+    mouseEvent = "mouseup";
+}
+
+canvas.addEventListener("mouseleave", mouseLeave);
+
+function mouseLeave(e) {
+    mouseEvent = "mouseleave";
+}
+
+function clearCanvas() {
+    canvasReference.clearRect(0, 0, canvasReference.canvas.width, canvasReference.canvas.height);
 }
